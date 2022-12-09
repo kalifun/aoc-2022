@@ -2,12 +2,13 @@ package main
 
 import (
 	"github.com/kalifun/aco-2022/aoc_go/logic"
-	"github.com/kalifun/aco-2022/aoc_go/repo/decypt"
+	"github.com/kalifun/aco-2022/aoc_go/repo/decrypt"
 )
 
 func main() {
-	handles := decypt.NewDecyptHandle(
+	handles := decrypt.NewDecyptHandle(
 		logic.NewCalorie(),
+		logic.NewMorraGame(),
 	)
 	handles.Decypt()
 }

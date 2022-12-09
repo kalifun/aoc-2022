@@ -1,4 +1,4 @@
-package decypt
+package decrypt
 
 import (
 	"log"
@@ -6,23 +6,23 @@ import (
 	"github.com/kalifun/aco-2022/aoc_go/entity/proto"
 )
 
-// decyptHandle
-type decyptHandle struct {
+// decryptHandle  TODO 
+type decryptHandle struct {
 	handles []proto.CollectStars
 }
 
 // NewDecyptHandle
 //  @param handles
 //  @return decyptHandle
-func NewDecyptHandle(handles ...proto.CollectStars) decyptHandle {
-	return decyptHandle{
+func NewDecyptHandle(handles ...proto.CollectStars) decryptHandle {
+	return decryptHandle{
 		handles: handles,
 	}
 }
 
 // Decypt
 //  @receiver d
-func (d decyptHandle) Decypt() {
+func (d decryptHandle) Decypt() {
 	for _, handle := range d.handles {
 		err := handle.GetStar()
 		if err != nil {

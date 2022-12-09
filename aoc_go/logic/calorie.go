@@ -33,7 +33,7 @@ func (c *calorie) GetStar() error {
 		return err
 	}
 	c.readerFile()
-	log.Printf(consts.CalorieAnswer, c.answer1, c.answer2)
+	log.Printf(consts.CalorieAnswer+consts.Answer, c.answer1, c.answer2)
 	return nil
 }
 
