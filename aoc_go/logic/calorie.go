@@ -14,10 +14,40 @@ import (
 
 // calorie
 type calorie struct {
-	buf       *os.File
-	answer1   interface{}
-	answer2   interface{}
-	spareTire []int
+	buf     *os.File
+	answer1 interface{}
+	answer2 interface{}
+}
+
+// calorieCount
+type calorieCount struct {
+	limit  int
+	counts []int
+}
+
+// SortTopN
+//  @receiver c
+//  @param count
+func (c *calorieCount) SortTopN(count int) {
+	if len(c.counts) < c.limit {
+		c.counts = append(c.counts, count)
+		return
+	}
+
+	c.counts = append(c.counts, count)
+	sort.Ints(c.counts)
+	c.counts = c.counts[1:]
+}
+
+// Sum
+//  @receiver c
+//  @return int
+func (c *calorieCount) Sum() int {
+	var sum int
+	for _, count := range c.counts {
+		sum += count
+	}
+	return sum
 }
 
 // NewCalorie
@@ -32,7 +62,7 @@ func (c *calorie) GetStar() error {
 	if err != nil {
 		return err
 	}
-	c.readerFile()
+	c.collect()
 	log.Printf(consts.CalorieAnswer+consts.Answer, c.answer1, c.answer2)
 	return nil
 }
@@ -52,23 +82,28 @@ func (c *calorie) boot() error {
 
 // readerFile
 //  @receiver c
-func (c *calorie) readerFile() {
+func (c *calorie) collect() {
 	reader := bufio.NewReader(c.buf)
 	var max, next int
+	counter := calorieCount{
+		limit:  3,
+		counts: []int{},
+	}
+
 	for {
 		line, _, err := reader.ReadLine()
 		if err == io.EOF {
 			if next > max {
 				max = next
 			}
-			c.spareTire = append(c.spareTire, next)
+			counter.SortTopN(next)
 			break
 		}
 		if len(line) == 0 {
 			if next > max {
 				max = next
 			}
-			c.spareTire = append(c.spareTire, next)
+			counter.SortTopN(next)
 			next = 0
 			continue
 		}
@@ -81,15 +116,5 @@ func (c *calorie) readerFile() {
 		next += lineInt
 	}
 	c.answer1 = max
-	c.part2()
-}
-
-// part2
-//  @receiver c
-func (c *calorie) part2() {
-	sort.Ints(c.spareTire)
-	length := len(c.spareTire)
-	if length >= 3 {
-		c.answer2 = c.spareTire[length-1] + c.spareTire[length-2] + c.spareTire[length-3]
-	}
+	c.answer2 = counter.Sum()
 }
