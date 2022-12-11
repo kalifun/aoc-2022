@@ -2,7 +2,6 @@ package logic
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -69,8 +68,9 @@ func (r *rucksack) collect() {
 }
 
 // theSameWord
-//  @param str
-//  @return int32
+//
+//	@param str
+//	@return int32
 func theSameWord(str string) int32 {
 	len := len(str)
 	data := []rune(str)
@@ -90,8 +90,9 @@ func theSameWord(str string) int32 {
 }
 
 // getSite
-//  @param w
-//  @return rune
+//
+//	@param w
+//	@return rune
 func getSite(w rune) rune {
 	yes := unicode.IsUpper(w)
 	if yes {
@@ -123,10 +124,6 @@ func (c *category) getBadges() int32 {
 		c.parseTag(c.bags[1])
 		c.parseTag(c.bags[2])
 	}
-
-	fmt.Println(c.bags)
-	fmt.Println(c.sameMap)
-	// fmt.Println(c.bags)
 	for k, v := range c.sameMap {
 		if v == 3 {
 			return k
