@@ -31,7 +31,7 @@ func (c *campCleanup) GetStar() error {
 		return err
 	}
 	c.collect()
-	log.Printf(consts.RucksackAnswer+consts.Answer, c.answer1, c.answer2)
+	log.Printf(consts.CampAnswer+consts.Answer, c.answer1, c.answer2)
 	return nil
 }
 
