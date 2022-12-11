@@ -2,7 +2,6 @@ package logic
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -80,7 +79,7 @@ func NewCleanup(str string) (*cleanup, error) {
 	}
 	ok := c.checkLine()
 	if !ok {
-		return c, errors.New(fmt.Sprintf(consts.InvalidLine, str))
+		return c, fmt.Errorf(fmt.Sprintf(consts.InvalidLine, str))
 	}
 	return c, nil
 }
