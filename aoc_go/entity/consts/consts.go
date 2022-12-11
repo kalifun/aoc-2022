@@ -2,11 +2,12 @@ package consts
 
 // Explore the path
 const (
-	DataDir         = "data"
-	CaloriePath     = "calories.txt"
-	MorraPath       = "morra.txt"
-	RucksackPath    = "rucksack.txt"
-	CampCleanupPath = "camp.txt"
+	DataDir          = "data"
+	CaloriePath      = "calories.txt"
+	MorraPath        = "morra.txt"
+	RucksackPath     = "rucksack.txt"
+	CampCleanupPath  = "camp.txt"
+	SupplyStacksPath = "supply.txt"
 )
 
 // log
@@ -16,6 +17,7 @@ const (
 	MorraAnswer    = "\n --- \n Day 2: Rock Paper Scissors \n "
 	RucksackAnswer = "\n --- \n Day 3: Rucksack Reorganization \n "
 	CampAnswer     = "\n --- \n Day 4: Camp Cleanup \n "
+	SupplyAnswer   = "\n --- \n Day 5: Supply Stacks \n "
 )
 
 // error
