@@ -2,10 +2,11 @@ package consts
 
 // Explore the path
 const (
-	DataDir      = "data"
-	CaloriePath  = "calories.txt"
-	MorraPath    = "morra.txt"
-	RucksackPath = "rucksack.txt"
+	DataDir         = "data"
+	CaloriePath     = "calories.txt"
+	MorraPath       = "morra.txt"
+	RucksackPath    = "rucksack.txt"
+	CampCleanupPath = "camp.txt"
 )
 
 // log
@@ -14,4 +15,10 @@ const (
 	CalorieAnswer  = "\n --- \n Day 1: Calorie Counting \n "
 	MorraAnswer    = "\n --- \n Day 2: Rock Paper Scissors \n "
 	RucksackAnswer = "\n --- \n Day 3: Rucksack Reorganization \n "
+	CampAnswer     = "\n --- \n Day 4: Camp Cleanup \n "
+)
+
+// error
+const (
+	InvalidLine = "The current row does not meet the question requirements, line: %s"
 )

@@ -7,9 +7,10 @@ import (
 
 func main() {
 	handles := decrypt.NewDecyptHandle(
-		// logic.NewCalorie(),
-		// logic.NewMorraGame(),
+		logic.NewCalorie(),
+		logic.NewMorraGame(),
 		logic.NewRuclSack(),
+		logic.NewCampCleanup(),
 	)
 	handles.Decypt()
 }
