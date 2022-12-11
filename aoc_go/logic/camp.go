@@ -2,6 +2,8 @@ package logic
 
 import (
 	"bufio"
+	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -45,18 +47,25 @@ func (c *campCleanup) boot() error {
 
 func (c *campCleanup) collect() {
 	reader := bufio.NewReader(c.buf)
-	var part1Sum int
+	var part1Sum, part2Sum int
 	for {
 		line, _, err := reader.ReadLine()
 		if err == io.EOF {
 			break
 		}
-		c := NewCleanup(string(line))
+		c, err := NewCleanup(string(line))
+		if err != nil {
+			break
+		}
 		if c.FullyContains() {
 			part1Sum += 1
 		}
+		if c.Overlapping() {
+			part2Sum += 1
+		}
 	}
 	c.answer1 = part1Sum
+	c.answer2 = part2Sum
 }
 
 type cleanup struct {
@@ -65,23 +74,33 @@ type cleanup struct {
 	part2 []int
 }
 
-func NewCleanup(str string) *cleanup {
-	return &cleanup{
+func NewCleanup(str string) (*cleanup, error) {
+	c := &cleanup{
 		line: str,
 	}
+	ok := c.checkLine()
+	if !ok {
+		return c, errors.New(fmt.Sprintf(consts.InvalidLine, str))
+	}
+	return c, nil
 }
 
 func (c *cleanup) FullyContains() bool {
-	if !c.checkLine() {
-		return false
-	}
-
 	if c.part1[0] <= c.part2[0] && c.part1[1] >= c.part2[1] {
 		return true
 	}
 
 	if c.part1[0] >= c.part2[0] && c.part1[1] <= c.part2[1] {
 		return true
+	}
+	return false
+}
+
+func (c *cleanup) Overlapping() bool {
+	for i := c.part2[0]; i <= c.part2[1]; i++ {
+		if c.part1[0] <= i && i <= c.part1[1] {
+			return true
+		}
 	}
 	return false
 }
