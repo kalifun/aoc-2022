@@ -48,7 +48,7 @@ func (d *device) boot() error {
 func (d *device) collect() {
 	reader := bufio.NewReader(d.buf)
 	for {
-		line, _, err := reader.ReadLine()
+		_, _, err := reader.ReadLine()
 		if err == io.EOF {
 			break
 		}
