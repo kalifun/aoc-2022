@@ -9,6 +9,7 @@ const (
 	CampCleanupPath   = "camp.txt"
 	SupplyStacksPath  = "supply.txt"
 	TuningTroublePath = "tuningTrouble.txt"
+	DevicePath        = "device.txt"
 )
 
 // log
@@ -20,6 +21,7 @@ const (
 	CampAnswer          = "\n --- \n Day 4: Camp Cleanup \n "
 	SupplyAnswer        = "\n --- \n Day 5: Supply Stacks \n "
 	TuningTroubleAnswer = "\n --- \n Day 6: Tuning Trouble \n "
+	Deviceanswer        = "\n --- \n Day 7: No Space Left On Device \n "
 )
 
 // error
