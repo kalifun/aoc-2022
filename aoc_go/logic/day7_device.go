@@ -69,6 +69,7 @@ func (d *device) collect() {
 		}
 	}
 	d.answer1 = t.Part1Answer()
+	d.answer2 = t.Part2Answer()
 }
 
 // terminal  TODO
@@ -157,9 +158,11 @@ func (t *terminal) dir(name string) {
 //  @param size
 func (t *terminal) file(name string, size int64) {
 	// log.Printf("filename %s filesize %d \n", name, size)
+	// 根目录
+	t.bucket.Size(size)
 	if t.currentLocation == nil {
 		t.bucket.File(name, size)
-		t.bucket.Size(size)
+		// t.bucket.Size(size)
 		// log.Printf("root 目录的大小: %d \n", t.bucket.size)
 	} else {
 		t.currentLocation.File(name, size)
@@ -176,9 +179,7 @@ func (t *terminal) file(name string, size int64) {
 //  @param father
 //  @param size
 func (t *terminal) fatherSize(father *dir, size int64) {
-	if father == nil {
-		t.bucket.size += size
-	} else {
+	if father != nil {
 		father.size += size
 		if father.fatherDir != nil {
 			t.fatherSize(father.fatherDir, size)
@@ -218,6 +219,60 @@ func (t *terminal) Part1Answer() interface{} {
 		count += counter(dir)
 	}
 	return count
+}
+
+// Part2Answer
+//  @receiver t
+//  @return interface{}
+func (t *terminal) Part2Answer() interface{} {
+	// log.Printf("已使用大小 %d\n", t.bucket.size)
+	total := 70000000
+	unused := 30000000
+	delete := unused - (total - int(t.bucket.size))
+	del := NewDeleteWork(int64(delete))
+	return del.MinDelSize(t.bucket.dirs)
+}
+
+// deleteWork  TODO
+type deleteWork struct {
+	delete int64
+	option int64
+}
+
+// NewDeleteWork
+//  @param del
+//  @return *deleteWork
+func NewDeleteWork(del int64) *deleteWork {
+	return &deleteWork{
+		delete: del,
+	}
+}
+
+// Option
+//  @receiver d
+//  @param dirs
+func (d *deleteWork) options(dirs map[string]*dir) {
+	for _, dir := range dirs {
+		if dir.size > d.delete {
+			if d.option == 0 {
+				d.option = dir.size
+			} else {
+				if d.option > dir.size {
+					d.option = dir.size
+				}
+			}
+		}
+		d.options(dir.dirs)
+	}
+}
+
+// MinDelSize
+//  @receiver d
+//  @param dirs
+//  @return int64
+func (d *deleteWork) MinDelSize(dirs map[string]*dir) int64 {
+	d.options(dirs)
+	return d.option
 }
 
 // counter
