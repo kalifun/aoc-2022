@@ -5,15 +5,24 @@ import (
 	"io"
 	"log"
 	"os"
+	"strconv"
+	"strings"
 
 	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
 	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
 )
 
+// device  TODO
 type device struct {
 	buf     *os.File
 	answer1 interface{}
 	answer2 interface{}
+}
+
+// NewDevice
+//  @return *device
+func NewDevice() *device {
+	return &device{}
 }
 
 // GetStar
@@ -23,7 +32,7 @@ type device struct {
 func (d *device) GetStar() error {
 	err := d.boot()
 	if err != nil {
-		log.Fatalf("Failed to read the contents of the file, filename: %s", consts.CaloriePath)
+		log.Fatalf("Failed to read the contents of the file, filename: %s", consts.DevicePath)
 		return err
 	}
 	d.collect()
@@ -36,83 +45,278 @@ func (d *device) GetStar() error {
 //	@receiver t
 //	@return error
 func (d *device) boot() error {
-	data, err := utils.NewFileReader(consts.TuningTroublePath)
+	data, err := utils.NewFileReader(consts.DevicePath)
 	if err != nil {
-		log.Fatalf("Failed to read the contents of the file, filename: %s", consts.CaloriePath)
+		log.Fatalf("Failed to read the contents of the file, filename: %s", consts.DevicePath)
 		return err
 	}
 	d.buf = data
 	return nil
 }
 
+// collect
+//  @receiver d
 func (d *device) collect() {
 	reader := bufio.NewReader(d.buf)
+	t := NewTerminal()
 	for {
-		_, _, err := reader.ReadLine()
+		line, _, err := reader.ReadLine()
 		if err == io.EOF {
 			break
 		}
-
+		if string(line) != "" {
+			t.ReadLine(string(line))
+		}
 	}
+	d.answer1 = t.Part1Answer()
 }
 
+// terminal  TODO
 type terminal struct {
-	bucket *bucket
+	bucket          *bucket
+	currentLocation *dir
 }
 
+// NewTerminal
+//  @return *terminal
 func NewTerminal() *terminal {
 	return &terminal{
-		bucket: NewBucket(),
+		bucket:          NewBucket(),
+		currentLocation: nil,
 	}
 }
 
+// ReadLine
+//  @receiver t
+//  @param line
 func (t *terminal) ReadLine(line string) {
+	// command
+	if strings.HasPrefix(line, "$") {
+		if strings.Contains(line, "cd") {
+			splitLine := strings.Split(line, " ")
+			t.cd(splitLine[len(splitLine)-1])
+			return
+		}
 
+		if strings.Contains(line, "ls") {
+			return
+		}
+	}
+
+	// dir
+	if strings.HasPrefix(line, "dir") {
+		splitLine := strings.Split(line, " ")
+		t.dir(splitLine[len(splitLine)-1])
+		return
+	}
+
+	// file
+	splitLine := strings.Split(line, " ")
+	size, err := strconv.ParseInt(splitLine[0], 10, 64)
+	if err != nil {
+		return
+	}
+	t.file(splitLine[len(splitLine)-1], size)
 }
 
+// cd
+//  @receiver t
+//  @param path
+func (t *terminal) cd(path string) {
+	switch path {
+	case "/":
+		// root
+		t.currentLocation = nil
+	case "..":
+		// jump up
+		t.currentLocation = t.currentLocation.fatherDir
+	default:
+		// cd dir
+		if t.currentLocation == nil {
+			t.currentLocation = t.bucket.dirs[path]
+		} else {
+			t.currentLocation = t.currentLocation.dirs[path]
+		}
+	}
+}
+
+// dir
+//  @receiver t
+//  @param name
+func (t *terminal) dir(name string) {
+	if t.currentLocation == nil {
+		t.bucket.Dir(name)
+	} else {
+		t.currentLocation.Dir(name)
+	}
+}
+
+// file
+//  @receiver t
+//  @param name
+//  @param size
+func (t *terminal) file(name string, size int64) {
+	// log.Printf("filename %s filesize %d \n", name, size)
+	if t.currentLocation == nil {
+		t.bucket.File(name, size)
+		t.bucket.Size(size)
+		// log.Printf("root 目录的大小: %d \n", t.bucket.size)
+	} else {
+		t.currentLocation.File(name, size)
+		// 将其记录当当前层的目录大小
+		t.currentLocation.Size(size)
+		// 将当前的大小也记录到上层大小
+		t.fatherSize(t.currentLocation.fatherDir, size)
+		// log.Printf("当前目录的大小: %d \n", t.currentLocation.size)
+	}
+}
+
+// fatherSize
+//  @receiver t
+//  @param father
+//  @param size
+func (t *terminal) fatherSize(father *dir, size int64) {
+	if father == nil {
+		t.bucket.size += size
+	} else {
+		father.size += size
+		if father.fatherDir != nil {
+			t.fatherSize(father.fatherDir, size)
+		}
+	}
+}
+
+// func (t *terminal) Part1(dirs map[string]*dir, pre int) {
+// 	for name, dir := range dirs {
+// 		data := []string{}
+// 		for i := 0; i < pre; i++ {
+// 			data = append(data, "-------")
+// 		}
+// 		var filecount int64
+// 		for _, v := range dir.files {
+// 			filecount += v
+// 		}
+// 		tt := "False"
+// 		if dir.size < 100000 {
+// 			t.max += dir.size
+// 			tt = "Yes"
+// 		}
+
+// 		fmt.Printf("%s [files %d]\n", strings.Join(data, ""), filecount)
+// 		fmt.Printf("%s (%s %d)  %s  \n", strings.Join(data, ""), name, dir.size, tt)
+// 		t.Part1(dir.dirs, pre+1)
+// 	}
+// }
+
+// Part1Answer
+//  @receiver t
+//  @return interface{}
+func (t *terminal) Part1Answer() interface{} {
+	// counter
+	var count int64
+	for _, dir := range t.bucket.dirs {
+		count += counter(dir)
+	}
+	return count
+}
+
+// counter
+//  @param dir
+//  @return int64
+func counter(dir *dir) int64 {
+	var size int64
+	for _, v := range dir.dirs {
+		if v.size < 100000 {
+			size += v.size
+		}
+		count := counter(v)
+		size += count
+	}
+	return size
+}
+
+// bucket  TODO
 type bucket struct {
+	size  int64
 	files map[string]int64
-	dirs  map[string]dir
+	dirs  map[string]*dir
 }
 
+// NewBucket
+//  @return *bucket
 func NewBucket() *bucket {
-	return &bucket{}
+	return &bucket{
+		files: make(map[string]int64),
+		dirs:  make(map[string]*dir),
+	}
 }
 
+// File
+//  @receiver b
+//  @param name
+//  @param size
 func (b *bucket) File(name string, size int64) {
 	b.files[name] = size
 }
 
-func (b *bucket) Dir(name string) dir {
-	folder := NewDir()
-	b.dirs[name] = *folder
-	return *folder
+// Dir
+//  @receiver b
+//  @param name
+//  @return *dir
+func (b *bucket) Dir(name string) *dir {
+	folder := NewDir(nil)
+	b.dirs[name] = folder
+	return folder
 }
 
+// Size
+//  @receiver b
+//  @param size
+func (b *bucket) Size(size int64) {
+	b.size += size
+}
+
+// dir  TODO
 type dir struct {
-	size  int64
-	files map[string]int64
-	dirs  map[string]dir
+	fatherDir *dir
+	size      int64
+	files     map[string]int64
+	dirs      map[string]*dir
 }
 
-func NewDir() *dir {
+// NewDir
+//  @param fatherDir
+//  @return *dir
+func NewDir(fatherDir *dir) *dir {
 	return &dir{
-		size:  0,
-		files: make(map[string]int64),
-		dirs:  make(map[string]dir),
+		fatherDir: fatherDir,
+		size:      0,
+		files:     make(map[string]int64),
+		dirs:      make(map[string]*dir),
 	}
 }
 
+// Size
+//  @receiver d
+//  @param size
 func (d *dir) Size(size int64) {
-	d.size = size
+	d.size += size
 }
 
+// File
+//  @receiver d
+//  @param name
+//  @param size
 func (d *dir) File(name string, size int64) {
 	d.files[name] = size
 }
 
-func (d *dir) Dir(name string) dir {
-	folder := NewDir()
-	d.dirs[name] = *folder
-	return *folder
+// Dir
+//  @receiver d
+//  @param name
+//  @return *dir
+func (d *dir) Dir(name string) *dir {
+	folder := NewDir(d)
+	d.dirs[name] = folder
+	return folder
 }
