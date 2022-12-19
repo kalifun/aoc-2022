@@ -7,8 +7,8 @@ import (
 	"os"
 	"unicode"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 type rucksack struct {

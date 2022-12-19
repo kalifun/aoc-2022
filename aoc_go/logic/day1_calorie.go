@@ -8,8 +8,8 @@ import (
 	"sort"
 	"strconv"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 // calorie
@@ -26,8 +26,9 @@ type calorieCount struct {
 }
 
 // SortTopN
-//  @receiver c
-//  @param count
+//
+//	@receiver c
+//	@param count
 func (c *calorieCount) SortTopN(count int) {
 	if len(c.counts) < c.limit {
 		c.counts = append(c.counts, count)
@@ -40,8 +41,9 @@ func (c *calorieCount) SortTopN(count int) {
 }
 
 // Sum
-//  @receiver c
-//  @return int
+//
+//	@receiver c
+//	@return int
 func (c *calorieCount) Sum() int {
 	var sum int
 	for _, count := range c.counts {
@@ -51,7 +53,8 @@ func (c *calorieCount) Sum() int {
 }
 
 // NewCalorie
-//  @return *calorie
+//
+//	@return *calorie
 func NewCalorie() *calorie {
 	return &calorie{}
 }
@@ -68,8 +71,9 @@ func (c *calorie) GetStar() error {
 }
 
 // boot
-//  @receiver c
-//  @return error
+//
+//	@receiver c
+//	@return error
 func (c *calorie) boot() error {
 	data, err := utils.NewFileReader(consts.CaloriePath)
 	if err != nil {
@@ -81,7 +85,8 @@ func (c *calorie) boot() error {
 }
 
 // readerFile
-//  @receiver c
+//
+//	@receiver c
 func (c *calorie) collect() {
 	reader := bufio.NewReader(c.buf)
 	var max, next int

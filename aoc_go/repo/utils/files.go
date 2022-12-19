@@ -5,7 +5,7 @@ import (
 	"os"
 	"path"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
+	"github.com/kalifun/aco-2022/entity/consts"
 )
 
 // ReadFile

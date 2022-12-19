@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 type morraGame struct {
@@ -86,8 +86,9 @@ const (
 )
 
 // getMorraTool
-//  @param str
-//  @return morraTool
+//
+//	@param str
+//	@return morraTool
 func getMorraTool(str string) morraTool {
 	var res morraTool
 	switch str {
@@ -115,16 +116,18 @@ type fixedGesture struct {
 }
 
 // NewFixedGesture
-//  @param g
-//  @return fixedGesture
+//
+//	@param g
+//	@return fixedGesture
 func NewFixedGesture(g morraTool) fixedGesture {
 	return fixedGesture{gesture: g}
 }
 
 // PK
-//  @receiver fg
-//  @param other
-//  @return int
+//
+//	@receiver fg
+//	@param other
+//	@return int
 func (fg fixedGesture) PK(other morraTool) int {
 	if int(fg.gesture) == int(other) {
 		return 3 + int(other)
@@ -142,8 +145,9 @@ func (fg fixedGesture) PK(other morraTool) int {
 }
 
 // lost
-//  @receiver fg
-//  @return morraTool
+//
+//	@receiver fg
+//	@return morraTool
 func (fg fixedGesture) lost() morraTool {
 	switch fg.gesture {
 	case rock:
@@ -187,9 +191,10 @@ func (fg fixedGesture) getNewTool(other morraTool) morraTool {
 }
 
 // DiyRules
-//  @receiver fg
-//  @param other
-//  @return int
+//
+//	@receiver fg
+//	@param other
+//	@return int
 func (fg fixedGesture) DiyRules(other morraTool) int {
 	newTool := fg.getNewTool(other)
 	return fg.PK(newTool)

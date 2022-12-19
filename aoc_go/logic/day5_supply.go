@@ -9,8 +9,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 // supplyStacks  TODO
@@ -21,14 +21,16 @@ type supplyStacks struct {
 }
 
 // NewSupplyStacks
-//  @return *supplyStacks
+//
+//	@return *supplyStacks
 func NewSupplyStacks() *supplyStacks {
 	return &supplyStacks{}
 }
 
 // GetStar
-//  @receiver s
-//  @return error
+//
+//	@receiver s
+//	@return error
 func (s *supplyStacks) GetStar() error {
 	err := s.boot()
 	if err != nil {
@@ -51,7 +53,8 @@ func (s *supplyStacks) boot() error {
 }
 
 // collect
-//  @receiver s
+//
+//	@receiver s
 func (s *supplyStacks) collect() {
 	reader := bufio.NewReader(s.buf)
 	c := NewCrates()
@@ -73,7 +76,8 @@ type crates struct {
 }
 
 // NewCrates
-//  @return *crates
+//
+//	@return *crates
 func NewCrates() *crates {
 	return &crates{
 		part1Stacks: make(map[uint][]string),
@@ -82,8 +86,9 @@ func NewCrates() *crates {
 }
 
 // AutoWork
-//  @receiver c
-//  @param line
+//
+//	@receiver c
+//	@param line
 func (c *crates) AutoWork(line string) {
 	// Parsing whether the current row is a header or a move operation
 	if line == "" {
@@ -136,10 +141,11 @@ func (c *crates) AutoWork(line string) {
 }
 
 // move
-//  @receiver c
-//  @param from
-//  @param to
-//  @param num
+//
+//	@receiver c
+//	@param from
+//	@param to
+//	@param num
 func (c *crates) move(from, to, num uint) {
 	dm := NewDataMigration(from, to, num)
 	part1 := dm.Migration(c.part1Stacks, true)
@@ -156,10 +162,11 @@ type dataMigration struct {
 }
 
 // NewDataMigration
-//  @param from
-//  @param to
-//  @param num
-//  @return dataMigration
+//
+//	@param from
+//	@param to
+//	@param num
+//	@return dataMigration
 func NewDataMigration(from, to, num uint) dataMigration {
 	return dataMigration{
 		from: from,
@@ -169,10 +176,11 @@ func NewDataMigration(from, to, num uint) dataMigration {
 }
 
 // Migration
-//  @receiver d
-//  @param stack
-//  @param reversal
-//  @return map
+//
+//	@receiver d
+//	@param stack
+//	@param reversal
+//	@return map
 func (d dataMigration) Migration(stack map[uint][]string, reversal bool) map[uint][]string {
 	var waitMoveList []string
 	if fromVal, ok := stack[d.from]; ok {
@@ -194,8 +202,9 @@ func (d dataMigration) Migration(stack map[uint][]string, reversal bool) map[uin
 }
 
 // getAnswer
-//  @param stack
-//  @return interface{}
+//
+//	@param stack
+//	@return interface{}
 func getAnswer(stack map[uint][]string) interface{} {
 	var res []string
 	for i := 0; i < len(stack); i++ {

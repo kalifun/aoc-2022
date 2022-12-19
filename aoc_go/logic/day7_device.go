@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 // device  TODO
@@ -20,7 +20,8 @@ type device struct {
 }
 
 // NewDevice
-//  @return *device
+//
+//	@return *device
 func NewDevice() *device {
 	return &device{}
 }
@@ -55,7 +56,8 @@ func (d *device) boot() error {
 }
 
 // collect
-//  @receiver d
+//
+//	@receiver d
 func (d *device) collect() {
 	reader := bufio.NewReader(d.buf)
 	t := NewTerminal()
@@ -79,7 +81,8 @@ type terminal struct {
 }
 
 // NewTerminal
-//  @return *terminal
+//
+//	@return *terminal
 func NewTerminal() *terminal {
 	return &terminal{
 		bucket:          NewBucket(),
@@ -88,8 +91,9 @@ func NewTerminal() *terminal {
 }
 
 // ReadLine
-//  @receiver t
-//  @param line
+//
+//	@receiver t
+//	@param line
 func (t *terminal) ReadLine(line string) {
 	// command
 	if strings.HasPrefix(line, "$") {
@@ -121,8 +125,9 @@ func (t *terminal) ReadLine(line string) {
 }
 
 // cd
-//  @receiver t
-//  @param path
+//
+//	@receiver t
+//	@param path
 func (t *terminal) cd(path string) {
 	switch path {
 	case "/":
@@ -142,8 +147,9 @@ func (t *terminal) cd(path string) {
 }
 
 // dir
-//  @receiver t
-//  @param name
+//
+//	@receiver t
+//	@param name
 func (t *terminal) dir(name string) {
 	if t.currentLocation == nil {
 		t.bucket.Dir(name)
@@ -153,9 +159,10 @@ func (t *terminal) dir(name string) {
 }
 
 // file
-//  @receiver t
-//  @param name
-//  @param size
+//
+//	@receiver t
+//	@param name
+//	@param size
 func (t *terminal) file(name string, size int64) {
 	// log.Printf("filename %s filesize %d \n", name, size)
 	// 根目录
@@ -175,9 +182,10 @@ func (t *terminal) file(name string, size int64) {
 }
 
 // fatherSize
-//  @receiver t
-//  @param father
-//  @param size
+//
+//	@receiver t
+//	@param father
+//	@param size
 func (t *terminal) fatherSize(father *dir, size int64) {
 	if father != nil {
 		father.size += size
@@ -210,8 +218,9 @@ func (t *terminal) fatherSize(father *dir, size int64) {
 // }
 
 // Part1Answer
-//  @receiver t
-//  @return interface{}
+//
+//	@receiver t
+//	@return interface{}
 func (t *terminal) Part1Answer() interface{} {
 	// counter
 	var count int64
@@ -222,8 +231,9 @@ func (t *terminal) Part1Answer() interface{} {
 }
 
 // Part2Answer
-//  @receiver t
-//  @return interface{}
+//
+//	@receiver t
+//	@return interface{}
 func (t *terminal) Part2Answer() interface{} {
 	// log.Printf("已使用大小 %d\n", t.bucket.size)
 	total := 70000000
@@ -240,8 +250,9 @@ type deleteWork struct {
 }
 
 // NewDeleteWork
-//  @param del
-//  @return *deleteWork
+//
+//	@param del
+//	@return *deleteWork
 func NewDeleteWork(del int64) *deleteWork {
 	return &deleteWork{
 		delete: del,
@@ -249,8 +260,9 @@ func NewDeleteWork(del int64) *deleteWork {
 }
 
 // Option
-//  @receiver d
-//  @param dirs
+//
+//	@receiver d
+//	@param dirs
 func (d *deleteWork) options(dirs map[string]*dir) {
 	for _, dir := range dirs {
 		if dir.size > d.delete {
@@ -267,17 +279,19 @@ func (d *deleteWork) options(dirs map[string]*dir) {
 }
 
 // MinDelSize
-//  @receiver d
-//  @param dirs
-//  @return int64
+//
+//	@receiver d
+//	@param dirs
+//	@return int64
 func (d *deleteWork) MinDelSize(dirs map[string]*dir) int64 {
 	d.options(dirs)
 	return d.option
 }
 
 // counter
-//  @param dir
-//  @return int64
+//
+//	@param dir
+//	@return int64
 func counter(dir *dir) int64 {
 	var size int64
 	for _, v := range dir.dirs {
@@ -298,7 +312,8 @@ type bucket struct {
 }
 
 // NewBucket
-//  @return *bucket
+//
+//	@return *bucket
 func NewBucket() *bucket {
 	return &bucket{
 		files: make(map[string]int64),
@@ -307,17 +322,19 @@ func NewBucket() *bucket {
 }
 
 // File
-//  @receiver b
-//  @param name
-//  @param size
+//
+//	@receiver b
+//	@param name
+//	@param size
 func (b *bucket) File(name string, size int64) {
 	b.files[name] = size
 }
 
 // Dir
-//  @receiver b
-//  @param name
-//  @return *dir
+//
+//	@receiver b
+//	@param name
+//	@return *dir
 func (b *bucket) Dir(name string) *dir {
 	folder := NewDir(nil)
 	b.dirs[name] = folder
@@ -325,8 +342,9 @@ func (b *bucket) Dir(name string) *dir {
 }
 
 // Size
-//  @receiver b
-//  @param size
+//
+//	@receiver b
+//	@param size
 func (b *bucket) Size(size int64) {
 	b.size += size
 }
@@ -340,8 +358,9 @@ type dir struct {
 }
 
 // NewDir
-//  @param fatherDir
-//  @return *dir
+//
+//	@param fatherDir
+//	@return *dir
 func NewDir(fatherDir *dir) *dir {
 	return &dir{
 		fatherDir: fatherDir,
@@ -352,24 +371,27 @@ func NewDir(fatherDir *dir) *dir {
 }
 
 // Size
-//  @receiver d
-//  @param size
+//
+//	@receiver d
+//	@param size
 func (d *dir) Size(size int64) {
 	d.size += size
 }
 
 // File
-//  @receiver d
-//  @param name
-//  @param size
+//
+//	@receiver d
+//	@param name
+//	@param size
 func (d *dir) File(name string, size int64) {
 	d.files[name] = size
 }
 
 // Dir
-//  @receiver d
-//  @param name
-//  @return *dir
+//
+//	@receiver d
+//	@param name
+//	@return *dir
 func (d *dir) Dir(name string) *dir {
 	folder := NewDir(d)
 	d.dirs[name] = folder

@@ -6,8 +6,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/kalifun/aco-2022/aoc_go/entity/consts"
-	"github.com/kalifun/aco-2022/aoc_go/repo/utils"
+	"github.com/kalifun/aco-2022/entity/consts"
+	"github.com/kalifun/aco-2022/repo/utils"
 )
 
 type tuningTrouble struct {
@@ -17,14 +17,16 @@ type tuningTrouble struct {
 }
 
 // NewTuningTrouble
-//  @return *tuningTrouble
+//
+//	@return *tuningTrouble
 func NewTuningTrouble() *tuningTrouble {
 	return &tuningTrouble{}
 }
 
 // GetStar
-//  @receiver t
-//  @return error
+//
+//	@receiver t
+//	@return error
 func (t *tuningTrouble) GetStar() error {
 	err := t.boot()
 	if err != nil {
@@ -37,8 +39,9 @@ func (t *tuningTrouble) GetStar() error {
 }
 
 // boot
-//  @receiver t
-//  @return error
+//
+//	@receiver t
+//	@return error
 func (t *tuningTrouble) boot() error {
 	data, err := utils.NewFileReader(consts.TuningTroublePath)
 	if err != nil {
@@ -57,8 +60,9 @@ type cs struct {
 }
 
 // NewCS
-//  @param limit
-//  @return *cs
+//
+//	@param limit
+//	@return *cs
 func NewCS(limit int) *cs {
 	return &cs{
 		limit: limit,
@@ -67,9 +71,10 @@ func NewCS(limit int) *cs {
 }
 
 // Connect
-//  @receiver c
-//  @param line
-//  @return bool
+//
+//	@receiver c
+//	@param line
+//	@return bool
 func (c *cs) Connect(line string) bool {
 	for _, v := range line {
 		if c.parseStr(v) {
@@ -80,9 +85,10 @@ func (c *cs) Connect(line string) bool {
 }
 
 // parseStr
-//  @receiver c
-//  @param char
-//  @return bool
+//
+//	@receiver c
+//	@param char
+//	@return bool
 func (c *cs) parseStr(char rune) bool {
 	c.index++
 	for idx, val := range c.data {
@@ -98,14 +104,16 @@ func (c *cs) parseStr(char rune) bool {
 }
 
 // GetIndex
-//  @receiver c
-//  @return int
+//
+//	@receiver c
+//	@return int
 func (c *cs) GetIndex() int {
 	return c.index
 }
 
 // collect
-//  @receiver t
+//
+//	@receiver t
 func (t *tuningTrouble) collect() {
 	reader := bufio.NewReader(t.buf)
 
