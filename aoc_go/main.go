@@ -15,6 +15,7 @@ func main() {
 		logic.NewTuningTrouble(),
 		logic.NewDevice(),
 		logic.NewTreeHouse(),
+		logic.NewRopeBridge(),
 	)
 	handles.Decypt()
 }

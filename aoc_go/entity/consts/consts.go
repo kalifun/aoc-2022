@@ -11,6 +11,7 @@ const (
 	TuningTroublePath = "tuningTrouble.txt"
 	DevicePath        = "device.txt"
 	TreeHouse         = "tree_house.txt"
+	RopeBridge        = "rope_bridge.txt"
 )
 
 // log
@@ -24,6 +25,7 @@ const (
 	TuningTroubleAnswer = "\n --- \n Day 6: Tuning Trouble \n "
 	Deviceanswer        = "\n --- \n Day 7: No Space Left On Device \n "
 	TreeHouseAnswer     = "\n --- \n Day 8: Treetop Tree House \n "
+	RopeBridgeAnswer    = "\n --- \n Day 9: Rope Bridge \n "
 )
 
 // error
