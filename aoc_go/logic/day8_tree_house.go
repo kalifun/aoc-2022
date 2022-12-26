@@ -2,7 +2,6 @@ package logic
 
 import (
 	"bufio"
-	"fmt"
 	"io"
 	"log"
 	"os"
@@ -62,7 +61,7 @@ func (t *treeHouse) collect() {
 
 		tMap.ReadLine(string(line))
 	}
-	tMap.FoundAnswer()
+	t.answer1 = tMap.Part1Answer()
 }
 
 type treeInfo struct {
@@ -104,119 +103,61 @@ func (tm *treeMap) ReadLine(str string) {
 	tm.horizontal = append(tm.horizontal, horizontalTree)
 }
 
-func (tm *treeMap) FoundAnswer() {
-	fmt.Println(tm.horizontalTree() + tm.verticalTree())
+// Part1Answer
+//
+//	@receiver tm
+//	@return interface{}
+func (tm *treeMap) Part1Answer() interface{} {
+	return visibleQuantity(tm.horizontal) + visibleQuantity(tm.vertical)
 }
 
-func (tm *treeMap) horizontalTree() int {
+// visibleQuantity
+//
+//	@param data
+//	@return int
+func visibleQuantity(data [][]*treeInfo) int {
 	var count int
-	for index, horizontalTree := range tm.horizontal {
+	for index, tree := range data {
 		var max int
-		for i := 0; i < len(horizontalTree); i++ {
-			val := horizontalTree[i]
-			if index == 0 || index == len(horizontalTree)-1 {
-				horizontalTree[i].Checked = true
+		for i := 0; i < len(tree); i++ {
+			val := tree[i]
+			if i == 0 || index == 0 || index == len(tree)-1 {
+				max = val.Val
+				if !val.Checked {
+					count++
+					tree[i].Checked = true
+				}
+				continue
+			}
+
+			if val.Val > max {
+				max = val.Val
+				if val.Checked {
+					continue
+				}
 				count++
-				fmt.Printf("可以识别的%d\n", val.Val)
-				continue
-			}
-			if i == 0 {
-				max = horizontalTree[i].Val
-				if !val.Checked {
-					horizontalTree[i].Checked = true
-					count++
-					fmt.Printf("可以识别的%d\n", val.Val)
-				}
-			}
-			if val.Checked {
-				// pass
-				continue
-			} else {
-				if val.Val > max {
-					max = val.Val
-					horizontalTree[i].Checked = true
-					count++
-					fmt.Printf("可以识别的%d\n", val.Val)
-				}
+				tree[i].Checked = true
 			}
 		}
 
-		max = 0
-		for i := len(horizontalTree) - 1; i >= 0; i-- {
-			val := horizontalTree[i]
-			if i == len(horizontalTree)-1 {
-				max = horizontalTree[i].Val
+		for i := len(tree) - 1; i >= 0; i-- {
+			val := tree[i]
+			if i == len(tree)-1 {
+				max = val.Val
 				if !val.Checked {
-					horizontalTree[i].Checked = true
 					count++
-					fmt.Printf("可以识别的%d\n", val.Val)
+					tree[i].Checked = true
 				}
-			}
-			if val.Checked {
-				// pass
 				continue
-			} else {
-				if val.Val > max {
-					max = val.Val
-					horizontalTree[i].Checked = true
-					count++
-					fmt.Printf("可以识别的%d\n", val.Val)
-				}
 			}
-		}
-	}
-	return count
-}
 
-func (tm *treeMap) verticalTree() int {
-	var count int
-	for _, verticalTree := range tm.vertical {
-		var max int
-		for i := 0; i < len(verticalTree); i++ {
-			val := verticalTree[i]
-			if i == 0 {
-				max = verticalTree[i].Val
-				if !val.Checked {
-					verticalTree[i].Checked = true
-					count++
-					fmt.Printf("x可以识别的%d\n", val.Val)
+			if val.Val > max {
+				max = val.Val
+				if val.Checked {
+					continue
 				}
-			}
-			if val.Checked {
-				// pass
-				continue
-			} else {
-				if val.Val > max {
-					fmt.Println(max, verticalTree[i])
-					max = val.Val
-					verticalTree[i].Checked = true
-					count++
-					fmt.Printf("xx可以识别的%d %v\n", val.Val, verticalTree)
-				}
-			}
-		}
-
-		max = 0
-		for i := len(verticalTree) - 1; i >= 0; i-- {
-			val := verticalTree[i]
-			if i == len(verticalTree)-1 {
-				max = verticalTree[i].Val
-				if !val.Checked {
-					verticalTree[i].Checked = true
-					count++
-					fmt.Printf("y可以识别的%d\n", val.Val)
-				}
-			}
-			if val.Checked {
-				// pass
-				continue
-			} else {
-				if val.Val > max {
-					max = val.Val
-					verticalTree[i].Checked = true
-					count++
-					fmt.Printf("yy可以识别的%d\n", val.Val)
-				}
+				count++
+				tree[i].Checked = true
 			}
 		}
 	}
