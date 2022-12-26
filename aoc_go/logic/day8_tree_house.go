@@ -62,6 +62,7 @@ func (t *treeHouse) collect() {
 		tMap.ReadLine(string(line))
 	}
 	t.answer1 = tMap.Part1Answer()
+	t.answer2 = tMap.Part2Answer()
 }
 
 type treeInfo struct {
@@ -109,6 +110,64 @@ func (tm *treeMap) ReadLine(str string) {
 //	@return interface{}
 func (tm *treeMap) Part1Answer() interface{} {
 	return visibleQuantity(tm.horizontal) + visibleQuantity(tm.vertical)
+}
+
+func (tm *treeMap) Part2Answer() interface{} {
+	var sumRes int
+	for index, tree := range tm.horizontal {
+		for i := 0; i < len(tree); i++ {
+			val := tree[i]
+			top := tm.vertical[i][0:index]
+			left := tree[0:i]
+			right := tree[i+1:]
+			down := tm.vertical[i][index+1:]
+			var count []int
+			count = append(count, reverse(top, val.Val))
+			count = append(count, order(down, val.Val))
+			count = append(count, reverse(left, val.Val))
+			count = append(count, order(right, val.Val))
+
+			if sum(count) > sumRes {
+				sumRes = sum(count)
+			}
+		}
+	}
+	return sumRes
+}
+
+func sum(res []int) int {
+	var sum int
+	for i, v := range res {
+		if i == 0 {
+			sum = v
+			continue
+		}
+		sum *= v
+	}
+	return sum
+}
+
+func order(trees []*treeInfo, val int) int {
+	var count int
+	for _, tree := range trees {
+		count += 1
+		if tree.Val >= val {
+			break
+		}
+	}
+	return count
+}
+
+func reverse(trees []*treeInfo, val int) int {
+	var count int
+	for i := len(trees) - 1; i >= 0; i-- {
+		valT := trees[i]
+		count += 1
+		if valT.Val >= val {
+			break
+		}
+	}
+	return count
 }
 
 // visibleQuantity
