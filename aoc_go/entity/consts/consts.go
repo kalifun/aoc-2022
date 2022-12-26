@@ -10,6 +10,7 @@ const (
 	SupplyStacksPath  = "supply.txt"
 	TuningTroublePath = "tuningTrouble.txt"
 	DevicePath        = "device.txt"
+	TreeHouse         = "tree_house.txt"
 )
 
 // log
@@ -22,6 +23,7 @@ const (
 	SupplyAnswer        = "\n --- \n Day 5: Supply Stacks \n "
 	TuningTroubleAnswer = "\n --- \n Day 6: Tuning Trouble \n "
 	Deviceanswer        = "\n --- \n Day 7: No Space Left On Device \n "
+	TreeHouseAnswer     = "\n --- \n Day 8: Treetop Tree House \n "
 )
 
 // error
